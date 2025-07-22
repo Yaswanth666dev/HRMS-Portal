@@ -100,7 +100,7 @@ body {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  /* background: white; */
 }
 
 th, td {
@@ -183,7 +183,7 @@ th, td {
 
 .salary-form button {
   padding: 10px 16px;
-  background-color: #007bff;
+  background-color: #343a40;
   color: white;
   border: none;
   font-weight: bold;
@@ -262,7 +262,7 @@ table button:last-child {
 
 /* Style table header */
 table thead {
-  background-color: #007bff;
+    background-color: #343a40;
   color: white;
 }
 
@@ -271,9 +271,9 @@ table th {
 }
 
 /* Optional: zebra striping */
-table tbody tr:nth-child(odd) {
+/* table tbody tr:nth-child(odd) {
   background-color: #f9f9f9;
-}
+} */
 .holiday-container {
   padding: 30px;
   font-family: 'Segoe UI', sans-serif;
@@ -307,7 +307,7 @@ table tbody tr:nth-child(odd) {
 }
 
 .holiday-table thead {
-  background-color: #007bff;
+  background-color: #343a40;
   color: white;
 }
 
@@ -357,3 +357,12 @@ table tbody tr:nth-child(odd) {
   line-height: 1.5;
   color: #333;
 }
+.salary-table tbody tr:nth-child(even) {
+  background-color: #e6f0ff !important;
+}
+
+.salary-table tbody tr:nth-child(odd) {
+  background-color: #ffffff !important;
+}
+
+

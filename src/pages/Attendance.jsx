@@ -98,114 +98,88 @@ useEffect(() => {
   };
 
   return (
-    <div style={{ padding: '30px' }}>
-      <h1>Monthly Attendance - July 2025</h1>
+  <div style={{ padding: '30px' }}>
+  <style>{`
+    .employee-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
 
-      {editingId && (
-        <form onSubmit={handleUpdate} style={{ marginBottom: '20px' }}>
-          <select
-            name="employeeId"
-            value={formData.employeeId}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Select Employee</option>
-            {employees.map((e) => (
-              <option key={e.id} value={e.id}>
-                {e.name}
-              </option>
-            ))}
-          </select>
-          <input
-            name="daysPresent"
-            type="number"
-            value={formData.daysPresent}
-            onChange={handleInputChange}
-            placeholder="Present"
-            required
-          />
-          <input
-            name="daysAbsent"
-            type="number"
-            value={formData.daysAbsent}
-            onChange={handleInputChange}
-            placeholder="Absent"
-            required
-          />
-          <input
-            name="daysLeave"
-            type="number"
-            value={formData.daysLeave}
-            onChange={handleInputChange}
-            placeholder="Leave"
-            required
-          />
-          <button type="submit">Update</button>
-        </form>
-      )}
+    .employee-table th, .employee-table td {
+      padding: 12px 16px;
+      text-align: left;
+    }
 
-      <button
-        onClick={exportToPDF}
-        style={{
-          marginBottom: '15px',
-          padding: '8px 16px',
-          backgroundColor: '#4CAF50',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          fontWeight: 'bold',
-        }}
-      >
-        📄 Export PDF
-      </button>
+    .employee-table thead {
+      background-color: #343a40;
+      color: white;
+    }
 
-      <div ref={tableRef}>
-        <table border="1" cellPadding="8" cellSpacing="0" width="100%">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Present</th>
-              <th title="Absent = Did not attend without approved leave">Absent 🛈</th>
-              <th title="Leave = Approved time off like sick/casual leave">Leave 🛈</th>
-              <th>Total</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {attendanceData.map((record) => (
-              <tr key={record.id}>
-                <td>{record.id}</td>
-                <td>{getEmployeeName(record.employeeId)}</td>
-                <td>{record.daysPresent}</td>
-                <td>{record.daysAbsent}</td>
-                <td>{record.daysLeave}</td>
-                <td>
-                  {+record.daysPresent + +record.daysAbsent + +record.daysLeave}
-                </td>
-                <td>
-                  <button onClick={() => handleEditClick(record)} style={{ marginRight: '5px' }}>
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(record.id)}
-                    style={{ background: '#f44336', color: '#fff' }}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {attendanceData.length === 0 && (
-              <tr>
-                <td colSpan="7">No records found.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    .employee-table tbody tr:nth-child(odd) {
+      background-color: #e6f0ff;
+    }
+
+    .employee-table tbody tr:nth-child(even) {
+      background-color: #ffffff;
+    }
+
+    .employee-table tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+  `}</style>
+
+  <h1>Monthly Attendance - July 2025</h1>
+
+  {/* ...form and buttons... */}
+
+  <div ref={tableRef}>
+    <table className="employee-table" border="1" cellPadding="8" cellSpacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Present</th>
+          <th title="Absent = Did not attend without approved leave">Absent 🛈</th>
+          <th title="Leave = Approved time off like sick/casual leave">Leave 🛈</th>
+          <th>Total</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {attendanceData.map((record) => (
+          <tr key={record.id}>
+            <td>{record.id}</td>
+            <td>{getEmployeeName(record.employeeId)}</td>
+            <td>{record.daysPresent}</td>
+            <td>{record.daysAbsent}</td>
+            <td>{record.daysLeave}</td>
+            <td>{+record.daysPresent + +record.daysAbsent + +record.daysLeave}</td>
+            <td>
+              <button onClick={() => handleEditClick(record)} style={{ marginRight: '5px' }}>
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(record.id)}
+                style={{ background: '#f44336', color: '#fff' }}
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        ))}
+        {attendanceData.length === 0 && (
+          <tr>
+            <td colSpan="7">No records found.</td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+</div>
+
   );
 };
 
