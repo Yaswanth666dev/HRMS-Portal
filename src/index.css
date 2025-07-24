@@ -366,3 +366,72 @@ table th {
 }
 
 
+.department-summary {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.department-card {
+  background: linear-gradient(135deg, #f0f8ff, #dff3ff);
+  border-left: 6px solid #0077b6;
+  padding: 16px 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+  min-width: 180px;
+  flex: 1 1 200px;
+  transition: all 0.3s ease;
+}
+
+.department-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.12);
+}
+
+.dept-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0077b6;
+}
+
+.dept-count {
+  font-size: 22px;
+  font-weight: bold;
+  color: #343a40;
+  margin-top: 5px;
+}
+.summary-cards {
+  display: flex;
+  gap: 20px;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+.summary-card {
+  display: flex;
+  flex-direction: column; /* ensures h4 on top, number below */
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 10px;
+  background: #e6f0ff; /* or specific for each card */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  min-width: 200px;
+}
+
+.summary-card:hover {
+  transform: translateY(-4px);
+}
+
+.card-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  font-weight: bold;
+}

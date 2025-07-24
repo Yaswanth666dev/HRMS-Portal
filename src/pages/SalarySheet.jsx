@@ -1,312 +1,45 @@
 
 
-// import React, { useEffect, useState, useRef } from 'react';
-// import jsPDF from 'jspdf';
-// import html2canvas from 'html2canvas';
 
-// const SalarySheet = () => {
-//   const [salaries, setSalaries] = useState([]);
-//   const [employees, setEmployees] = useState([]);
-//   const [formData, setFormData] = useState({
-//     employeeId: '',
-//     basic: '',
-//     hra: '',
-//     bonus: '',
-//     deductions: '',
-//   });
-//   const [editingId, setEditingId] = useState(null);
-//   const [filterName, setFilterName] = useState('');
-//   const tableRef = useRef();
-
-//   useEffect(() => {
-//     const saved = JSON.parse(localStorage.getItem('salaries')) || [];
-//     const empList = JSON.parse(localStorage.getItem('employees')) || [];
-//     setSalaries(saved);
-//     setEmployees(empList);
-//   }, []);
-
-//   const saveToLocal = (data) => {
-//     localStorage.setItem('salaries', JSON.stringify(data));
-//     setSalaries(data);
-//   };
-
-//   const getEmployeeName = (record) => {
-//     const emp = employees.find((e) => e.id === +record.employeeId);
-//     return emp ? emp.name : null;
-//   };
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-
-//     const newEntry = {
-//       id: editingId || Date.now(),
-//       employeeId: +formData.employeeId,
-//       basic: +formData.basic,
-//       hra: +formData.hra,
-//       bonus: +formData.bonus,
-//       deductions: +formData.deductions,
-//       total: +formData.basic + +formData.hra + +formData.bonus - +formData.deductions,
-//     };
-
-//     let updated;
-//     if (editingId) {
-//       updated = salaries.map((s) => (s.id === editingId ? newEntry : s));
-//       setEditingId(null);
-//     } else {
-//       updated = [...salaries, newEntry];
-//     }
-
-//     saveToLocal(updated);
-//     setFormData({
-//       employeeId: '',
-//       basic: '',
-//       hra: '',
-//       bonus: '',
-//       deductions: '',
-//     });
-//   };
-
-//   const handleEdit = (salary) => {
-//     setFormData({
-//       employeeId: salary.employeeId,
-//       basic: salary.basic,
-//       hra: salary.hra,
-//       bonus: salary.bonus,
-//       deductions: salary.deductions,
-//     });
-//     setEditingId(salary.id);
-//   };
-
-//   const handleDelete = (id) => {
-//     const updated = salaries.filter((s) => s.id !== id);
-//     saveToLocal(updated);
-//   };
-
-//   const exportToPDF = () => {
-//     html2canvas(tableRef.current).then((canvas) => {
-//       const imgData = canvas.toDataURL('image/png');
-//       const pdf = new jsPDF('landscape');
-//       pdf.addImage(imgData, 'PNG', 10, 10);
-//       pdf.save('salary-sheet.pdf');
-//     });
-//   };
-
-//   const exportToCSV = () => {
-//     const csv = [
-//       ['Name', 'Basic', 'HRA', 'Bonus', 'Deductions', 'Total'],
-//       ...filteredSalaries.map((s) => [
-//         getEmployeeName(s),
-//         s.basic,
-//         s.hra,
-//         s.bonus,
-//         s.deductions,
-//         s.total,
-//       ]),
-//     ]
-//       .map((row) => row.join(','))
-//       .join('\n');
-
-//     const blob = new Blob([csv], { type: 'text/csv' });
-//     const link = document.createElement('a');
-//     link.href = URL.createObjectURL(blob);
-//     link.download = 'salary-sheet.csv';
-//     link.click();
-//   };
-
-//   const filteredSalaries = salaries
-//     .filter((s) => employees.some((e) => e.id === +s.employeeId)) // ensure only valid employee
-//     .filter((s) =>
-//       getEmployeeName(s)?.toLowerCase().includes(filterName.toLowerCase())
-//     );
-
-//   return (
-//     <div style={{ padding: '30px' }}>
-//       <h1>Salary Sheet</h1>
-
-//       <form onSubmit={handleSubmit} className="salary-form">
-//         <select
-//           name="employeeId"
-//           value={formData.employeeId}
-//           onChange={handleChange}
-//           required
-//         >
-//           <option value="">Select Employee</option>
-//           {employees.map((emp) => (
-//             <option key={emp.id} value={emp.id}>
-//               {emp.name}
-//             </option>
-//           ))}
-//         </select>
-
-//         <input
-//           name="basic"
-//           type="number"
-//           placeholder="Basic"
-//           value={formData.basic}
-//           onChange={handleChange}
-//           required
-//         />
-//         <input
-//           name="hra"
-//           type="number"
-//           placeholder="HRA"
-//           value={formData.hra}
-//           onChange={handleChange}
-//           required
-//         />
-//         <input
-//           name="bonus"
-//           type="number"
-//           placeholder="Bonus"
-//           value={formData.bonus}
-//           onChange={handleChange}
-//         />
-//         <input
-//           name="deductions"
-//           type="number"
-//           placeholder="Deductions"
-//           value={formData.deductions}
-//           onChange={handleChange}
-//         />
-//         <button type="submit">{editingId ? 'Update Salary' : 'Add Salary'}</button>
-//       </form>
-
-//       <div style={{ marginTop: '20px' }}>
-//         <input
-//           type="text"
-//           placeholder="Search by name"
-//           value={filterName}
-//           onChange={(e) => setFilterName(e.target.value)}
-//           style={{ padding: '6px', marginBottom: '10px' }}
-//         />
-//         <button
-//           onClick={exportToCSV}
-//           style={{
-//             marginLeft: '10px',
-//             backgroundColor: '#343a40',
-             
-//             color: '#fff',
-//             border: 'none',
-//             padding: '8px 14px',
-//             borderRadius: '5px',
-//             fontWeight: 'bold',
-//             cursor: 'pointer',
-//           }}
-//         >
-//           Export CSV
-//         </button>
-//       </div>
-
-//       <div ref={tableRef}>
-//         <table border="1" cellPadding="8" cellSpacing="0" width="100%">
-//           <thead>
-//             <tr>
-//               <th>Name</th>
-//               <th>Basic</th>
-//               <th>HRA</th>
-//               <th>Bonus</th>
-//               <th>Deductions</th>
-//               <th>Total Salary</th>
-//               <th>Actions</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {filteredSalaries.map((sal) => (
-//               <tr key={sal.id}>
-//                 <td>{getEmployeeName(sal)}</td>
-//                 <td>₹{sal.basic}</td>
-//                 <td>₹{sal.hra}</td>
-//                 <td>₹{sal.bonus}</td>
-//                 <td>₹{sal.deductions}</td>
-//                 <td>
-//                   <strong>₹{sal.total}</strong>
-//                 </td>
-//                 <td>
-//                   <button onClick={() => handleEdit(sal)} style={{ marginRight: '5px' }}>
-//                     Edit
-//                   </button>
-//                   <button
-//                     onClick={() => handleDelete(sal.id)}
-//                     style={{ background: '#f44336', color: 'white' }}
-//                   >
-//                     Delete
-//                   </button>
-//                 </td>
-//               </tr>
-//             ))}
-//             {filteredSalaries.length === 0 && (
-//               <tr>
-//                 <td colSpan="7">No records found.</td>
-//               </tr>
-//             )}
-//           </tbody>
-//         </table>
-//       </div>
-
-//       <div style={{ marginTop: '20px', textAlign: 'right' }}>
-//         <button
-//           onClick={exportToPDF}
-//           style={{
-//             backgroundColor: '#343a40',
-//             color: '#fff',
-//             border: 'none',
-//             padding: '10px 18px',
-//             borderRadius: '5px',
-//             fontWeight: 'bold',
-//             cursor: 'pointer',
-//           }}
-//         >
-//           📄 Export PDF
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default SalarySheet;
-
-
-import React, { useEffect, useState, useRef } from 'react';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import React, { useEffect, useState, useRef } from "react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const SalarySheet = () => {
   const [salaries, setSalaries] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [formData, setFormData] = useState({
-    employeeId: '',
-    basic: '',
-    hra: '',
-    bonus: '',
-    deductions: '',
+    employeeId: "",
+    basic: "",
+    hra: "",
+    bonus: "",
+    deductions: "",
   });
   const [editingId, setEditingId] = useState(null);
-  const [filterName, setFilterName] = useState('');
+  const [filterName, setFilterName] = useState("");
+  const [filterDept, setFilterDept] = useState("");
   const tableRef = useRef();
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem('salaries')) || [];
-    const empList = JSON.parse(localStorage.getItem('employees')) || [];
+    const saved = JSON.parse(localStorage.getItem("salaries")) || [];
+    const empList = JSON.parse(localStorage.getItem("employees")) || [];
     setSalaries(saved);
     setEmployees(empList);
   }, []);
 
   const saveToLocal = (data) => {
-    localStorage.setItem('salaries', JSON.stringify(data));
+    localStorage.setItem("salaries", JSON.stringify(data));
     setSalaries(data);
   };
 
   const getEmployeeName = (record) => {
     const emp = employees.find((e) => e.id === +record.employeeId);
-    return emp ? emp.name : null;
+    return emp ? emp.name : "Unknown";
+  };
+
+  const getEmployeeDept = (id) => {
+    const emp = employees.find((e) => e.id === +id);
+    return emp?.department || "Unknown";
   };
 
   const handleChange = (e) => {
@@ -319,7 +52,6 @@ const SalarySheet = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const newEntry = {
       id: editingId || Date.now(),
       employeeId: +formData.employeeId,
@@ -327,24 +59,22 @@ const SalarySheet = () => {
       hra: +formData.hra,
       bonus: +formData.bonus,
       deductions: +formData.deductions,
-      total: +formData.basic + +formData.hra + +formData.bonus - +formData.deductions,
+      total:
+        +formData.basic + +formData.hra + +formData.bonus - +formData.deductions,
     };
 
-    let updated;
-    if (editingId) {
-      updated = salaries.map((s) => (s.id === editingId ? newEntry : s));
-      setEditingId(null);
-    } else {
-      updated = [...salaries, newEntry];
-    }
+    const updated = editingId
+      ? salaries.map((s) => (s.id === editingId ? newEntry : s))
+      : [...salaries, newEntry];
 
     saveToLocal(updated);
+    setEditingId(null);
     setFormData({
-      employeeId: '',
-      basic: '',
-      hra: '',
-      bonus: '',
-      deductions: '',
+      employeeId: "",
+      basic: "",
+      hra: "",
+      bonus: "",
+      deductions: "",
     });
   };
 
@@ -366,18 +96,19 @@ const SalarySheet = () => {
 
   const exportToPDF = () => {
     html2canvas(tableRef.current).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('landscape');
-      pdf.addImage(imgData, 'PNG', 10, 10);
-      pdf.save('salary-sheet.pdf');
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("landscape");
+      pdf.addImage(imgData, "PNG", 10, 10);
+      pdf.save("salary-sheet.pdf");
     });
   };
 
   const exportToCSV = () => {
     const csv = [
-      ['Name', 'Basic', 'HRA', 'Bonus', 'Deductions', 'Total'],
+      ["Name", "Department", "Basic", "HRA", "Bonus", "Deductions", "Total"],
       ...filteredSalaries.map((s) => [
         getEmployeeName(s),
+        getEmployeeDept(s.employeeId),
         s.basic,
         s.hra,
         s.bonus,
@@ -385,13 +116,13 @@ const SalarySheet = () => {
         s.total,
       ]),
     ]
-      .map((row) => row.join(','))
-      .join('\n');
+      .map((row) => row.join(","))
+      .join("\n");
 
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const link = document.createElement('a');
+    const blob = new Blob([csv], { type: "text/csv" });
+    const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = 'salary-sheet.csv';
+    link.download = "salary-sheet.csv";
     link.click();
   };
 
@@ -399,10 +130,21 @@ const SalarySheet = () => {
     .filter((s) => employees.some((e) => e.id === +s.employeeId))
     .filter((s) =>
       getEmployeeName(s)?.toLowerCase().includes(filterName.toLowerCase())
+    )
+    .filter((s) =>
+      filterDept ? getEmployeeDept(s.employeeId) === filterDept : true
     );
 
+  // Summary
+  const totalSalary = filteredSalaries.reduce((sum, s) => sum + s.total, 0);
+  const totalDeductions = filteredSalaries.reduce((sum, s) => sum + s.deductions, 0);
+  const averageSalary =
+    filteredSalaries.length > 0
+      ? (totalSalary / filteredSalaries.length).toFixed(2)
+      : 0;
+
   return (
-    <div style={{ padding: '30px' }}>
+    <div style={{ padding: "30px" }}>
       <style>{`
         .salary-table {
           width: 100%;
@@ -429,6 +171,33 @@ const SalarySheet = () => {
 
         .salary-table tbody tr:hover {
           background-color: #e0e0e0;
+        }
+
+        .summary-cards {
+          display: flex;
+          gap: 20px;
+          margin: 20px 0;
+          flex-wrap: wrap;
+        }
+
+        .summary-card {
+          background: #f0f4f8;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          min-width: 200px;
+          text-align: center;
+        }
+
+        .summary-card h4 {
+          margin: 0;
+          font-size: 16px;
+        }
+
+        .summary-card p {
+          font-weight: bold;
+          font-size: 20px;
+          margin: 10px 0 0;
         }
 
         .salary-form input,
@@ -498,39 +267,77 @@ const SalarySheet = () => {
           value={formData.deductions}
           onChange={handleChange}
         />
-        <button type="submit">{editingId ? 'Update Salary' : 'Add Salary'}</button>
+        <button type="submit">
+          {editingId ? "Update Salary" : "Add Salary"}
+        </button>
       </form>
 
-      <div style={{ marginTop: '20px' }}>
+      {/* Filters */}
+      <div style={{ marginTop: "20px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
         <input
           type="text"
           placeholder="Search by name"
           value={filterName}
           onChange={(e) => setFilterName(e.target.value)}
-          style={{ padding: '6px', marginBottom: '10px' }}
+          style={{ padding: "6px", minWidth: "180px" }}
         />
-        <button
-          onClick={exportToCSV}
-          style={{
-            marginLeft: '10px',
-            backgroundColor: '#343a40',
-            color: '#fff',
-            border: 'none',
-            padding: '8px 14px',
-            borderRadius: '5px',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-          }}
+
+        <select
+          value={filterDept}
+          onChange={(e) => setFilterDept(e.target.value)}
+          style={{ padding: "6px", minWidth: "180px" }}
         >
-          Export CSV
-        </button>
+          <option value="">All Departments</option>
+          {[...new Set(employees.map((e) => e.department))].map((dept) => (
+            <option key={dept} value={dept}>
+              {dept}
+            </option>
+          ))}
+        </select>
+
+        <button onClick={exportToCSV}>Export CSV</button>
       </div>
 
+      {/* Summary */}
+      <div className="summary-cards">
+  <div className="summary-card">
+    <div className="card-icon" style={{ backgroundColor: "#d0e4ff", color: "#0056b3" }}>
+      💰
+    </div>
+    <div>
+      <h4>Total Salary Paid</h4>
+      <p>₹{totalSalary.toLocaleString()}</p>
+    </div>
+  </div>
+
+  <div className="summary-card">
+    <div className="card-icon" style={{ backgroundColor: "#d0e4ff", color: "#0056b3" }}>
+      🧾
+    </div>
+    <div>
+      <h4>Total Deductions</h4>
+      <p>₹{totalDeductions.toLocaleString()}</p>
+    </div>
+  </div>
+
+  <div className="summary-card">
+    <div className="card-icon" style={{ backgroundColor: "#d0e4ff", color: "#0056b3" }}>
+      📊
+    </div>
+    <div>
+      <h4>Average Salary</h4>
+      <p>₹{Number(averageSalary).toLocaleString()}</p>
+    </div>
+  </div>
+</div>
+
+      {/* Table */}
       <div ref={tableRef}>
-        <table className="salary-table" border="1" cellPadding="8" cellSpacing="0">
+        <table className="salary-table" border="1">
           <thead>
             <tr>
               <th>Name</th>
+              <th>Department</th>
               <th>Basic</th>
               <th>HRA</th>
               <th>Bonus</th>
@@ -543,18 +350,19 @@ const SalarySheet = () => {
             {filteredSalaries.map((sal) => (
               <tr key={sal.id}>
                 <td>{getEmployeeName(sal)}</td>
+                <td>{getEmployeeDept(sal.employeeId)}</td>
                 <td>₹{sal.basic}</td>
                 <td>₹{sal.hra}</td>
                 <td>₹{sal.bonus}</td>
                 <td>₹{sal.deductions}</td>
                 <td><strong>₹{sal.total}</strong></td>
                 <td>
-                  <button onClick={() => handleEdit(sal)} style={{ marginRight: '5px' }}>
+                  <button onClick={() => handleEdit(sal)} style={{ marginRight: "5px" }}>
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(sal.id)}
-                    style={{ background: '#f44336', color: 'white' }}
+                    style={{ background: "#f44336", color: "#fff" }}
                   >
                     Delete
                   </button>
@@ -563,24 +371,25 @@ const SalarySheet = () => {
             ))}
             {filteredSalaries.length === 0 && (
               <tr>
-                <td colSpan="7">No records found.</td>
+                <td colSpan="8">No records found.</td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
 
-      <div style={{ marginTop: '20px', textAlign: 'right' }}>
+      {/* Export PDF */}
+      <div style={{ marginTop: "20px", textAlign: "right" }}>
         <button
           onClick={exportToPDF}
           style={{
-            backgroundColor: '#343a40',
-            color: '#fff',
-            border: 'none',
-            padding: '10px 18px',
-            borderRadius: '5px',
-            fontWeight: 'bold',
-            cursor: 'pointer',
+            backgroundColor: "#343a40",
+            color: "#fff",
+            border: "none",
+            padding: "10px 18px",
+            borderRadius: "5px",
+            fontWeight: "bold",
+            cursor: "pointer",
           }}
         >
           📄 Export PDF

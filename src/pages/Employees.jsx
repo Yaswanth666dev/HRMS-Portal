@@ -61,6 +61,10 @@ const Employees = () => {
     const updated = employees.filter(emp => emp.id !== id);
     saveToLocalStorage(updated);
   };
+const departmentBreakdown = employees.reduce((acc, emp) => {
+  acc[emp.department] = (acc[emp.department] || 0) + 1;
+  return acc;
+}, {});
 
   return (
     <div style={{ padding: '30px' }}>
@@ -143,8 +147,16 @@ const Employees = () => {
           color: white;
         }
       `}</style>
+<div className="department-summary">
+  {Object.entries(departmentBreakdown).map(([dept, count]) => (
+    <div key={dept} className="department-card">
+      <div className="dept-title">{dept}</div>
+      <div className="dept-count">{count} Employee{count > 1 ? 's' : ''}</div>
+    </div>
+  ))}
+</div>
 
-      <h1 style={{ marginBottom: '20px', color: '#333' }}>Employee Management</h1>
+
 
       <form onSubmit={handleSubmit} className="employee-form">
         <input
