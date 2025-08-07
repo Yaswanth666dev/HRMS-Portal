@@ -6,7 +6,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
 const SalarySheet = () => {
-  const [salaries, setSalaries] = useState([]);
+  const [salaries, setSalaries ] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [formData, setFormData] = useState({
     employeeId: "",
